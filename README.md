@@ -56,7 +56,10 @@ src/lecum/
   allocation.py     # alocação tiered e soft-allocation
   config.py         # hiperparâmetros e configurações centrais
   logging_utils.py  # logger JSON estruturado
+<<<<<<< codex/perform-in-depth-project-analysis-jh5ydo
   text_generation.py # geração autoregressiva condicionada
+=======
+>>>>>>> main
 
 tests/
   test_analysis.py
@@ -172,6 +175,7 @@ pytest -q
 
 - O download de dados usa `auto_adjust=False` explícito no `yfinance` para evitar mudança silenciosa de default.
 - Este projeto não substitui backtesting institucional com custos de transação, slippage, validação walk-forward e controles de risco formais.
+<<<<<<< codex/perform-in-depth-project-analysis-jh5ydo
 
 
 ## 9) Geração de texto estilo LLM (versão leve)
@@ -201,3 +205,5 @@ print(texto)
 ```
 
 > Próximo passo para ficar mais próximo de LLM real: trocar GRU por `TransformerDecoder` causal, usar tokenizer BPE/SentencePiece e treinar com corpus maior + RLHF/finetuning supervisionado.
+=======
+>>>>>>> main
