@@ -56,6 +56,10 @@ src/lecum/
   allocation.py     # alocação tiered e soft-allocation
   config.py         # hiperparâmetros e configurações centrais
   logging_utils.py  # logger JSON estruturado
+<<<<<<< codex/perform-in-depth-project-analysis-jh5ydo
+  text_generation.py # geração autoregressiva condicionada
+=======
+>>>>>>> main
 
 tests/
   test_analysis.py
@@ -171,3 +175,35 @@ pytest -q
 
 - O download de dados usa `auto_adjust=False` explícito no `yfinance` para evitar mudança silenciosa de default.
 - Este projeto não substitui backtesting institucional com custos de transação, slippage, validação walk-forward e controles de risco formais.
+<<<<<<< codex/perform-in-depth-project-analysis-jh5ydo
+
+
+## 9) Geração de texto estilo LLM (versão leve)
+
+Para adicionar geração de texto **similar ao fluxo de LLMs** (autoregressiva), incluímos `src/lecum/text_generation.py` com:
+
+- `TextGenConfig` para hiperparâmetros do decoder.
+- `LatentTextGenerator` (Embedding + GRU + LM head) condicionado por vetor latente.
+- `SimpleTokenizer` para prototipação rápida.
+
+Exemplo:
+
+```python
+import torch
+
+from lecum.text_generation import LatentTextGenerator, SimpleTokenizer, TextGenConfig
+
+vocab = ["<pad>", "<bos>", "<eos>", "<unk>", "cenário", "bullish", "bearish"]
+cfg = TextGenConfig(vocab_size=len(vocab), latent_dim=128, max_len=16)
+model = LatentTextGenerator(cfg)
+tokenizer = SimpleTokenizer(vocab)
+
+z = torch.randn(1, 128)
+out_ids = model.generate(z, max_new_tokens=8, temperature=0.8, top_k=5)
+texto = tokenizer.decode(out_ids[0].tolist())
+print(texto)
+```
+
+> Próximo passo para ficar mais próximo de LLM real: trocar GRU por `TransformerDecoder` causal, usar tokenizer BPE/SentencePiece e treinar com corpus maior + RLHF/finetuning supervisionado.
+=======
+>>>>>>> main

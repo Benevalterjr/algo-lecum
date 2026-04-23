@@ -13,4 +13,5 @@ __all__ = [
     "allocation",
     "config",
     "logging_utils",
+    "text_generation",
 ]
