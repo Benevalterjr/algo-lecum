@@ -21,7 +21,9 @@ def calculate_allocation(df: pd.DataFrame) -> pd.DataFrame:
 
     out["Suggested_Weight"] = out.apply(assign_weight, axis=1)
     total = float(out["Suggested_Weight"].sum())
-    out["Normalized_Weight"] = out["Suggested_Weight"] / total if total > 1.0 else out["Suggested_Weight"]
+    out["Normalized_Weight"] = (
+        out["Suggested_Weight"] / total if total > 1.0 else out["Suggested_Weight"]
+    )
     return out.sort_values(by="Conviction_Score", ascending=False).reset_index(drop=True)
 
 

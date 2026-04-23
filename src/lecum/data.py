@@ -6,13 +6,15 @@ import numpy as np
 import torch
 import yfinance as yf
 
+from .config import MarketConfig
 
-def get_market_context(ticker: str, period: str = "1mo", interval: str = "1d") -> torch.Tensor | None:
-    # auto_adjust explícito para evitar mudança silenciosa de default.
+
+def get_market_context(ticker: str, config: MarketConfig | None = None) -> torch.Tensor | None:
+    cfg = config or MarketConfig()
     data = yf.download(
         ticker,
-        period=period,
-        interval=interval,
+        period=cfg.period,
+        interval=cfg.interval,
         auto_adjust=False,
         progress=False,
     )
@@ -20,11 +22,16 @@ def get_market_context(ticker: str, period: str = "1mo", interval: str = "1d") -
         return None
 
     returns = data["Close"].pct_change().dropna()
-    vol = returns.rolling(window=5).std().dropna()
-    if len(returns) < 5 or len(vol) < 5:
+    vol = returns.rolling(window=cfg.lookback_volatility).std().dropna()
+    if len(returns) < cfg.lookback_returns or len(vol) < cfg.lookback_volatility:
         return None
 
-    context = np.concatenate([returns.values[-5:], vol.values[-5:]])
+    context = np.concatenate(
+        [
+            returns.values[-cfg.lookback_returns :],
+            vol.values[-cfg.lookback_volatility :],
+        ]
+    )
     return torch.tensor(context, dtype=torch.float32)
 
 
@@ -37,5 +44,9 @@ def pad_to_dim(x: torch.Tensor, target_dim: int = 64) -> torch.Tensor:
     return out
 
 
-def generate_market_candidates(n: int = 5, dim: int = 64, scale: float = 0.05) -> list[torch.Tensor]:
+def generate_market_candidates(
+    n: int = 5,
+    dim: int = 64,
+    scale: float = 0.05,
+) -> list[torch.Tensor]:
     return [torch.randn(dim, dtype=torch.float32) * scale for _ in range(n)]
