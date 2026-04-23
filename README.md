@@ -1,0 +1,2 @@
+# algo-lecum
+lecum algorithm
